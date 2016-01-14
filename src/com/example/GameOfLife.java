@@ -1,5 +1,6 @@
 package com.example;
 
+import java.util.Base64;
 import java.util.Random;
 
 /**
@@ -10,9 +11,12 @@ public class GameOfLife {
     int[][] board;
     int rows, cols;
     private int livingCount;
+    private CycleDetector<String> cycleDetector;
+    private boolean hasLoop;
+    private int afterBeingStable;
 
     public GameOfLife(int size) {
-        this(size, 0.5f);
+        this(size, 0.95f);
     }
 
     public GameOfLife(int size, float initialProbability) {
@@ -21,6 +25,7 @@ public class GameOfLife {
         this.cols = size;
 
         Random rand = new Random();
+        cycleDetector = new CycleDetector<>();
 
         this.livingCount = 0;
         for (int i = 0; i < rows; ++i) {
@@ -30,6 +35,7 @@ public class GameOfLife {
                 this.livingCount += this.board[i][j];
             }
         }
+        afterBeingStable = 0;
     }
 
     private boolean lifeRule(boolean isAlive, int neighborsLiving) {
@@ -43,6 +49,8 @@ public class GameOfLife {
     public void step() {
         int[][] oldBoard = board.clone();
         livingCount = 0;
+        byte[] hashData = new byte[this.rows * this.cols];
+        int k = 0;
         for (int x = 0; x < rows; ++x) {
             for (int y = 0; y < cols; ++y) {
                 int neighborsLiving = -oldBoard[x][y];
@@ -55,15 +63,20 @@ public class GameOfLife {
                 }
                 board[x][y] = this.lifeRule(oldBoard[x][y] == 1, neighborsLiving) ? 1 : 0;
                 livingCount += board[x][y];
+                hashData[k++] = (byte)board[x][y];
             }
         }
+        hasLoop = cycleDetector.addNext(Base64.getEncoder().encodeToString(hashData));
+        if (hasLoop)
+            afterBeingStable++;
     }
 
-    public void prettyPrint() {
+    public void prettyPrint(long iter) {
+        System.out.printf("[%5d]\n", iter);
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 int symbol = board[i][j];
-                System.out.print(symbol + " ");
+                System.out.print(symbol == 1 ? '\u2588' : ' ');
             }
             System.out.println();
         }
@@ -87,17 +100,18 @@ public class GameOfLife {
     public long run(int maxSteps) {
         long i = 0;
         // prettyPrint();
+        prettyPrint(i);
         while (!isStable() && maxSteps-- != 0) {
             ++i;
-            System.out.println("Total living: " + livingCount);
-            System.out.println("Mink: " + mink());
+            //System.out.printf("[%5d] Total living: %d\n", i, livingCount);
+            //System.out.println("Mink: " + mink());
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            prettyPrint(i);
+            sleep(500);
             step();
-            // sleep(500);
-            // prettyPrint();
         }
         // Following code is clearing the console
-        // System.out.print("\033[H\033[2J");
-        // System.out.flush();
         return i;
     }
 
