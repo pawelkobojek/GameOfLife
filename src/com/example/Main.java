@@ -1,5 +1,8 @@
 package com.example;
 
+import com.example.rules.ConwayLifeRule;
+import com.example.rules.LifeRule;
+
 import java.util.Locale;
 
 public class Main {
@@ -17,9 +20,10 @@ public class Main {
         if (args.length > 2) {
             maxSteps = Integer.parseInt(args[2]);
         }
+        LifeRule lifeRule = new ConwayLifeRule();
         for (float f = 0.01f; f <= 1.0f; f += 0.01f) {
             for (int i = 0; i < runsPerProb; ++i) {
-                long epochs = new GameOfLife(gameSize, f).run(maxSteps);
+                long epochs = new GameOfLife(gameSize, f, lifeRule).run(maxSteps);
                 System.out.println(String.format("%d;%.2f;%d;%d", gameSize, f, epochs, maxSteps));
             }
         }

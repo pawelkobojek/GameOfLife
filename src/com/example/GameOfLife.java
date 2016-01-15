@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.rules.LifeRule;
+
 import java.util.Base64;
 import java.util.Random;
 
@@ -15,11 +17,14 @@ public class GameOfLife {
     private boolean hasLoop;
     private int afterBeingStable;
 
-    public GameOfLife(int size) {
-        this(size, 0.5f);
+    private final LifeRule lifeRule;
+
+    public GameOfLife(int size, LifeRule lifeRule) {
+        this(size, 0.5f, lifeRule);
     }
 
-    public GameOfLife(int size, float initialProbability) {
+    public GameOfLife(int size, float initialProbability, LifeRule lifeRule) {
+        this.lifeRule = lifeRule;
         this.board = new int[size][size];
         this.rows = size;
         this.cols = size;
@@ -38,14 +43,6 @@ public class GameOfLife {
         afterBeingStable = 0;
     }
 
-    private boolean lifeRule(boolean isAlive, int neighborsLiving) {
-        if (!isAlive) {
-            return neighborsLiving == 3;
-        } else {
-            return ((neighborsLiving == 3) || (neighborsLiving == 2));
-        }
-    }
-
     public void step() {
         int[][] oldBoard = board.clone();
         livingCount = 0;
@@ -61,7 +58,7 @@ public class GameOfLife {
                         }
                     }
                 }
-                board[x][y] = this.lifeRule(oldBoard[x][y] == 1, neighborsLiving) ? 1 : 0;
+                board[x][y] = lifeRule.shouldLive(oldBoard[x][y] == 1, neighborsLiving) ? 1 : 0;
                 livingCount += board[x][y];
                 hashData[k++] = (byte) board[x][y];
             }

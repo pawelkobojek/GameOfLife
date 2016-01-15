@@ -1,21 +1,5 @@
 package com.example;
 
-class Node<T> {
-
-    Node(T value) {
-        this.value = value;
-        this.next = null;
-    }
-
-    Node(T value, Node<T> next) {
-        this.value = value;
-        this.next = next;
-    }
-
-    T value;
-    Node<T> next;
-}
-
 class CycleDetector<T> {
 
     Node<T> head, tail;
@@ -46,5 +30,21 @@ class CycleDetector<T> {
             if (slow.value.equals(fast.value))
                 return true;
         }
+    }
+
+    static class Node<T> {
+
+        Node(T value) {
+            this.value = value;
+            this.next = null;
+        }
+
+        Node(T value, Node<T> next) {
+            this.value = value;
+            this.next = next;
+        }
+
+        T value;
+        Node<T> next;
     }
 }
