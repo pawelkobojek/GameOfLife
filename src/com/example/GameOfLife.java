@@ -16,7 +16,7 @@ public class GameOfLife {
     private int afterBeingStable;
 
     public GameOfLife(int size) {
-        this(size, 0.95f);
+        this(size, 0.5f);
     }
 
     public GameOfLife(int size, float initialProbability) {
@@ -63,7 +63,7 @@ public class GameOfLife {
                 }
                 board[x][y] = this.lifeRule(oldBoard[x][y] == 1, neighborsLiving) ? 1 : 0;
                 livingCount += board[x][y];
-                hashData[k++] = (byte)board[x][y];
+                hashData[k++] = (byte) board[x][y];
             }
         }
         hasLoop = cycleDetector.addNext(Base64.getEncoder().encodeToString(hashData));
@@ -100,18 +100,18 @@ public class GameOfLife {
     public long run(int maxSteps) {
         long i = 0;
         // prettyPrint();
-        prettyPrint(i);
+//        prettyPrint(i);
         while (!isStable() && maxSteps-- != 0) {
             ++i;
             //System.out.printf("[%5d] Total living: %d\n", i, livingCount);
             //System.out.println("Mink: " + mink());
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-            prettyPrint(i);
-            sleep(500);
+            // Following code is clearing the console
+//            System.out.print("\033[H\033[2J");
+//            System.out.flush();
+//            prettyPrint(i);
+//            sleep(500);
             step();
         }
-        // Following code is clearing the console
         return i;
     }
 

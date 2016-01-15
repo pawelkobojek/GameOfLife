@@ -1,16 +1,27 @@
 package com.example;
 
+import java.util.Locale;
+
 public class Main {
     public static void main(String[] args) {
+        Locale.setDefault(Locale.US);
         int gameSize = 10;
-        float initialLivingProbability = 0.5f;
+        int runsPerProb = 100;
+        int maxSteps = 100;
         if (args.length > 0) {
             gameSize = Integer.parseInt(args[0]);
         }
         if (args.length > 1) {
-            initialLivingProbability = Float.parseFloat(args[1]);
+            runsPerProb = Integer.parseInt(args[1]);
         }
-        long epochs = new GameOfLife(gameSize, initialLivingProbability).run();
-        System.out.println("Population died after " + epochs + " epoch(s)");
+        if (args.length > 2) {
+            maxSteps = Integer.parseInt(args[2]);
+        }
+        for (float f = 0.01f; f <= 1.0f; f += 0.01f) {
+            for (int i = 0; i < runsPerProb; ++i) {
+                long epochs = new GameOfLife(gameSize, f).run(maxSteps);
+                System.out.println(String.format("%d;%.2f;%d;%d", gameSize, f, epochs, maxSteps));
+            }
+        }
     }
 }
