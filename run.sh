@@ -8,4 +8,4 @@ javac $SRC_DIR/rules/*.java -d $OUT_DIR \
 && \
 javac -cp $OUT_DIR $SRC_DIR/*.java -d $OUT_DIR \
 && \
-java -cp $OUT_DIR com.example.Main
+java -cp $OUT_DIR com.example.Main | ./plot.py
