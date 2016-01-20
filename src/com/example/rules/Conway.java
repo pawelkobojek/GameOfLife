@@ -3,7 +3,7 @@ package com.example.rules;
 /**
  * Created by pawelkobojek on 15.01.2016.
  */
-public class ConwayLifeRule implements LifeRule {
+public class Conway implements LifeRule {
     @Override
     public boolean shouldLive(boolean isAlive, int neighborsLiving) {
         if (!isAlive) {

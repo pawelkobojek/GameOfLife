@@ -3,17 +3,16 @@ import numpy as np
 import sys, os
 import matplotlib.pyplot as plt
 import pylab
-import fileinput
 
 
 from numpy import genfromtxt
 
 if __name__ == '__main__':
-    data_file = "output.txt"
-    if len(sys.argv) > 1:
-        data_file = sys.argv[1]
+    plot_title = "Conway"
+    if len(sys.argv) > 1:   
+        plot_title = sys.argv[1]
 
-    data = genfromtxt(fileinput.input(), delimiter=';')
+    data = genfromtxt(sys.stdin, delimiter=';')
     data = data[:, 1:3]
     results = []
     for x in sorted(np.unique(data[:,0])):
@@ -21,4 +20,5 @@ if __name__ == '__main__':
     data = np.array(results)
 
     plt.plot(data[:,0], data[:,1])
+    plt.title(plot_title)
     pylab.show()

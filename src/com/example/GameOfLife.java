@@ -13,9 +13,6 @@ public class GameOfLife {
     int[][] board;
     int rows, cols;
     private int livingCount;
-    private CycleDetector<String> cycleDetector;
-    private boolean hasLoop;
-    private int afterBeingStable;
 
     private final LifeRule lifeRule;
 
@@ -30,7 +27,6 @@ public class GameOfLife {
         this.cols = size;
 
         Random rand = new Random();
-        cycleDetector = new CycleDetector<>();
 
         this.livingCount = 0;
         for (int i = 0; i < rows; ++i) {
@@ -40,7 +36,6 @@ public class GameOfLife {
                 this.livingCount += this.board[i][j];
             }
         }
-        afterBeingStable = 0;
     }
 
     public void step() {
@@ -63,9 +58,6 @@ public class GameOfLife {
                 hashData[k++] = (byte) board[x][y];
             }
         }
-        hasLoop = cycleDetector.addNext(Base64.getEncoder().encodeToString(hashData));
-        if (hasLoop)
-            afterBeingStable++;
     }
 
     public void prettyPrint(long iter) {
