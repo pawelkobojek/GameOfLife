@@ -9,8 +9,11 @@ from numpy import genfromtxt
 
 if __name__ == '__main__':
     plot_title = "Conway"
+    out_dir = None
     if len(sys.argv) > 1:   
         plot_title = sys.argv[1]
+    if len(sys.argv) > 2:
+    	out_dir = sys.argv[2]
 
     data = genfromtxt(sys.stdin, delimiter=';')
     data = data[:, 1:3]
@@ -21,4 +24,7 @@ if __name__ == '__main__':
 
     plt.plot(data[:,0], data[:,1])
     plt.title(plot_title)
-    pylab.show()
+    if out_dir:
+    	plt.savefig(os.path.join(out_dir, plot_title+".png"))
+    else:
+    	pylab.show()
