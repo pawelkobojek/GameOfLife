@@ -2,7 +2,6 @@ package com.example;
 
 import com.example.rules.LifeRule;
 
-import java.util.Base64;
 import java.util.Random;
 
 /**
@@ -77,7 +76,7 @@ public class GameOfLife {
      * @return
      */
     public long run() {
-        return run(-1);
+        return run(-1, false);
     }
 
     /**
@@ -86,19 +85,22 @@ public class GameOfLife {
      * @param maxSteps Maximum number of state
      * @return Number of iteration before Game of Life has achieved stable state (or == maxState)
      */
-    public long run(int maxSteps) {
+    public long run(int maxSteps, boolean verbose) {
         long i = 0;
-        // prettyPrint();
-//        prettyPrint(i);
+        if (verbose) {
+            prettyPrint(i);
+        }
         while (!isStable() && maxSteps-- != 0) {
             ++i;
-            //System.out.printf("[%5d] Total living: %d\n", i, livingCount);
-            //System.out.println("Mink: " + mink());
-            // Following code is clearing the console
-//            System.out.print("\033[H\033[2J");
-//            System.out.flush();
-//            prettyPrint(i);
-//            sleep(500);
+            if (verbose) {
+                System.out.printf("[%5d] Total living: %d\n", i, livingCount);
+                System.out.println("Mink: " + mink());
+                // Following code is clearing the console
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+                prettyPrint(i);
+                sleep(500);
+            }
             step();
         }
         return i;
